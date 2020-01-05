@@ -1,13 +1,13 @@
 # firebase-autolist
 
-Lit-Element web component description
+Autolistado de los elementos del path de una base de datos de Firebase mostrando el valor de la clave que seleccionemos
 
 ## Demo
 
 ```
 <h2>Basic firebase-autolist Demo</h2>
 <h3>Demo</h3>
-<firebase-autolist></firebase-autolist>
+<firebase-autolist path="FIREBASE_PATH" field-key="KEY_DOCUMENT_TO_SHOW"></firebase-autolist>
 
 ```
 <!---
@@ -20,10 +20,15 @@ Lit-Element web component description
 </custom-element-demo>
 ```
 -->
-```html
-<firebase-autolist></firebase-autolist>
 
+```html
+<firebase-autolist path="/peliculas" field-key="titulo"></firebase-autolist>
 ```
+
+## Dependencies
+Is mandatory has login token from firebase.
+You can use [firebase-loginbutton](https://github.com/manufosela/firebase-loginbutton) component to do it.
+
 ## Install the Polymer-CLI
 
 First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) and npm (packaged with [Node.js](https://nodejs.org)) installed. Run `npm install` to install your element's dependencies, then run `polymer serve` to serve your element locally.
