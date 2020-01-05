@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <title>firebase-autolist demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script type="module" src="/node_modules/firebase-loginbutton/firebase-loginbutton.js"></script>
+    <script type="module" src="../firebase-autolist.js"></script>
+    <style>
+      .blocks {
+        display:flex;
+        flex-direction:row;
+        flex-wrap: wrap;
+      }
+      .block {
+        display:flex;
+        flex-direction:column;
+        flex-wrap: wrap;
+        white-space: normal;
+      }
+      .code {
+        padding: 20px;
+        color:#FFF; 
+        background: #000;
+      }
+      .attributes {
+        padding-left: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic firebase-autolist Demo</h3>
+      <div class="blocks">
+        <pre class="block code">
+          <code>
+            &lt;firebase-autolist path="FIREBASE_PATH" field-key="KEY_DOCUMENT_TO_SHOW"&gt;&lt;/firebase-autolist&gt;
+          </code>
+        </pre>
+        <pre class="block attributes">
+          <h3>Attributes</h3>
+          <ul>
+            <li>path (String)</li>
+            <li>field-key (String)</li>
+          </ul>
+        </pre>
+      </div>
+
+      <h1>DEMO</h1>
+      <firebase-loginbutton api-key="AIzaSyCVpVjyqS9qNcTsTDuQ8qBL1i4VPy5CdpY" domain="coleccion-peliculas"
+      messaging-sender-id="852819704247" app-id="1:852819704247:web:9ac0a093401920ed"></firebase-loginbutton>
+
+      <firebase-autolist path="/peliculas" field-key="titulo"></firebase-autolist>
+
+      <div id="info"></div>
+
+      <script>
+        const layer = document.querySelector('#info');
+        document.addEventListener('firebase-autoform-selectid', (ev) => {
+          layer.innerHTML = 'Recibido evento "firebase-autoform-selectid" con el detail: ' + JSON.stringify(ev.detail);
+        });
+      </script>
+    </div>
+  </body>
+</html>
