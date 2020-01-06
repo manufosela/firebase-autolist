@@ -13,7 +13,7 @@ import 'firebase/firebase-database';
  * @demo demo/index.html
  */
 
-class FirebaseAutolist extends LitElement {
+export class FirebaseAutolist extends LitElement {
   static get is() {
     return 'firebase-autolist';
   }
