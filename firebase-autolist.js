@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit-element';
-import {} from '@polymer/paper-spinner/paper-spinner.js';
+import '@polymer/paper-spinner/paper-spinner.js';
 import 'firebase/firebase-app';
 import 'firebase/firebase-database';
 
