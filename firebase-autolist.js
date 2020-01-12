@@ -50,7 +50,7 @@ export class FirebaseAutolist extends LitElement {
   constructor() {
     super();
     this.path = '/';
-    this.fieldKey = 'id';
+    this.fieldKey = '';
 
     this.data = null;
     this.dataUser = null;
@@ -85,22 +85,42 @@ export class FirebaseAutolist extends LitElement {
   }
 
   _getData() {
-    let data = this.data;
     this.shadowRoot.querySelector('#elements-layer').innerHTML = '';
+    if (this.fieldKey === '') {
+      this._getDataKeys();
+    } else {
+      this._getDataFields();
+    }
+
+    this.shadowRoot.querySelectorAll('#elements-layer a').forEach((el)=> {
+      el.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        document.dispatchEvent(new CustomEvent('firebase-autoform-selectid', {detail: {id: ev.target.name, objId: this.id}}));
+      });
+    });
+    this.shadowRoot.querySelector('#spinner').active = false;
+  }
+
+  _getDataFields() {
+    let data = this.data;
     data.forEach((elem, id) => {
       this.log(JSON.stringify(elem) + ' - ' + id);
       const liEl = document.createElement('li');
       liEl.innerHTML = `<a href='#' name='${id}'>[${id}] ${elem[this.fieldKey]}</a>`;
       this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
     });
-    this.shadowRoot.querySelectorAll('#elements-layer a').forEach((el)=> {
-      el.addEventListener('click', (ev) => {
-        ev.preventDefault();
-        ev.stopPropagation();
-        document.dispatchEvent(new CustomEvent('firebase-autoform-selectid', {detail: {id: ev.target.name}}));
-      });
+  }
+
+  _getDataKeys() {
+    let data = this.data;
+    let keys = Object.keys(data);
+    keys.forEach((elem) => {
+      this.log(elem);
+      const liEl = document.createElement('li');
+      liEl.innerHTML = `<a href='#' name='${elem}'>${elem}</a>`;
+      this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
     });
-    this.shadowRoot.querySelector('#spinner').active = false;
   }
 
   render() {
