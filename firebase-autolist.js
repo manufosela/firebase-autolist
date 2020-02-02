@@ -96,7 +96,7 @@ export class FirebaseAutolist extends LitElement {
       el.addEventListener('click', (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
-        document.dispatchEvent(new CustomEvent('firebase-autoform-selectid', {detail: {id: ev.target.name, objId: this.id}}));
+        document.dispatchEvent(new CustomEvent('firebase-autolist-selectid', {detail: {id: ev.target.name, objId: this.id}}));
       });
     });
     this.shadowRoot.querySelector('#spinner').active = false;
