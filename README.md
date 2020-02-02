@@ -29,6 +29,9 @@ Autolistado de los elementos del path de una base de datos de Firebase mostrando
 Is mandatory has login token from firebase.
 You can use [firebase-loginbutton](https://github.com/manufosela/firebase-loginbutton) component to do it.
 
+## Events
+When element is clicked dispatch **firebase-autolist-selectid** with payload element id and object id
+
 ## Install the Polymer-CLI
 
 First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) and npm (packaged with [Node.js](https://nodejs.org)) installed. Run `npm install` to install your element's dependencies, then run `polymer serve` to serve your element locally.
@@ -53,7 +56,7 @@ $ npm run build
 Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
 
 ##Author
-**user**
+**@manufosela**
 
 ## License
 
