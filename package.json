@@ -5,18 +5,18 @@
   "main": "firebase-autolist.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/manu/firebase-autolist"
+    "url": "https://github.com/manufosela/firebase-autolist"
   },
-  "author": "manu",
+  "author": "manufosela",
   "license": "Apache 2.0",
   "keywords": [
     "webcomponent",
     "lit-element"
   ],
   "bugs": {
-    "url": "https://github.com/manu/firebase-autolist/issues"
+    "url": "https://github.com/manufosela/firebase-autolist/issues"
   },
-  "homepage": "https://github.com/manu/firebase-autolist",
+  "homepage": "https://github.com/manufosela/firebase-autolist",
   "dependencies": {
     "@polymer/paper-spinner": "^3.0.2",
     "firebase": "^6.3.4",
