@@ -91,7 +91,11 @@ export class FirebaseAutolist extends LitElement {
     let starredStatusRef = firebase.database().ref(this.path);
     starredStatusRef.on('value', (snapshot) => {
       this.data = snapshot.val();
-      this._getData();
+      if (this.data) {
+        this._getData();
+      } else {
+        this.shadowRoot.querySelector('#elements-layer').innerHTML = 'No data found';
+      }
     });
   }
 
