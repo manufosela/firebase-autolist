@@ -65,14 +65,23 @@ export class FirebaseAutolist extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener('firebase-signin', (e) => {
-      this.user = e.detail.user.displayName;
-      this.dataUser = e.detail.user;
-      this.getData();
+    document.addEventListener('firebase-signin', (ev) => {
+      this._userLogged(ev);
     });
-    document.addEventListener('firebase-signout', (e) => {
-      this.dataUser = null;
-      this.data = null;
+    document.addEventListener('firebase-signout', (ev) => {
+      this._userLogout(ev);
+    });
+    const firebaseAreYouLoggedEvent = new Event('firebase-are-you-logged');
+    document.dispatchEvent(firebaseAreYouLoggedEvent);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.removeEventListener('firebase-signin', (ev) => {
+      this._userLogged(ev);
+    });
+    document.removeEventListener('firebase-signout', (ev) => {
+      this._userLogout(ev);
     });
   }
 
@@ -82,6 +91,18 @@ export class FirebaseAutolist extends LitElement {
       this.data = snapshot.val();
       this._getData();
     });
+  }
+
+  _userLogged(obj) {
+    if (!this.user && obj.detail.user) {
+      this.user = obj.detail.user.displayName;
+      this.dataUser = obj.detail.user;
+    }
+  }
+
+  _userLogout() {
+    this.dataUser = null;
+    this.data = null;
   }
 
   _getData() {
