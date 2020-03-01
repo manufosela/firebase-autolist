@@ -139,7 +139,7 @@ export class FirebaseAutolist extends LitElement {
         this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
       });
     } else {
-      this._getDataKeys(this.id);
+      this._getDataKeys(this.fieldKey);
     }
   }
 
