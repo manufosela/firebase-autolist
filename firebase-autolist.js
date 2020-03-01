@@ -148,9 +148,11 @@ export class FirebaseAutolist extends LitElement {
     let keys = Object.keys(data);
     keys.forEach((elem) => {
       this.log(elem);
-      const liEl = document.createElement('li');
-      liEl.innerHTML = `<a href='#' name='${elem}'>${elem}</a>`;
-      this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
+      if (elem !== '0') {
+        const liEl = document.createElement('li');
+        liEl.innerHTML = `<a href='#' name='${elem}'>${elem}</a>`;
+        this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
+      }
     });
   }
 
