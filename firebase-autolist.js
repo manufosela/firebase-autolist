@@ -67,6 +67,7 @@ export class FirebaseAutolist extends LitElement {
     super.connectedCallback();
     document.addEventListener('firebase-signin', (ev) => {
       this._userLogged(ev);
+      this.getData();
     });
     document.addEventListener('firebase-signout', (ev) => {
       this._userLogout(ev);
@@ -79,6 +80,7 @@ export class FirebaseAutolist extends LitElement {
     super.disconnectedCallback();
     document.removeEventListener('firebase-signin', (ev) => {
       this._userLogged(ev);
+      this.getData();
     });
     document.removeEventListener('firebase-signout', (ev) => {
       this._userLogout(ev);
