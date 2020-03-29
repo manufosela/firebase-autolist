@@ -53,14 +53,19 @@
 
       <firebase-autolist id="autolist-1" path="/"></firebase-autolist>
 
-      <firebase-autolist id="autolist-2" path="/peliculas" field-key="titulo"></firebase-autolist>
+      <firebase-autolist id="autolist-2" path="/peliculas" field-key="C02-título"></firebase-autolist>
 
       <div id="info"></div>
 
       <script>
         const layer = document.querySelector('#info');
-        document.addEventListener('firebase-autoform-selectid', (ev) => {
+        document.addEventListener('firebase-autolist-selectid', (ev) => {
           layer.innerHTML = 'Recibido evento "firebase-autoform-selectid" con el detail: ' + JSON.stringify(ev.detail);
+          if (ev.detail.objId === 'autolist-1') {
+            const autoform = document.querySelector('#autolist-2');
+            autoform.setAttribute('field-key', (ev.detail.id==='peliculas') ? 'C02-título' : '');
+            autoform.setAttribute('path', `/${ev.detail.id}`);
+          }
         });
       </script>
     </div>

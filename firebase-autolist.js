@@ -55,6 +55,10 @@ export class FirebaseAutolist extends LitElement {
     this.data = null;
     this.dataUser = null;
     this.bLog = false;
+
+    this._isSignIn = this._isSignIn.bind(this);
+    this._isSignOut = this._isSignOut.bind(this);
+    this._selectedElement = this._selectedElement.bind(this);
   }
 
   log(msg) {
@@ -63,27 +67,37 @@ export class FirebaseAutolist extends LitElement {
     }
   }
 
+  _isSignIn(ev) {
+    this._userLogged(ev);
+    this.getData();
+  }
+
+  _isSignOut(ev) {
+    this._userLogout(ev);
+  }
+
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener('firebase-signin', (ev) => {
-      this._userLogged(ev);
-      this.getData();
-    });
-    document.addEventListener('firebase-signout', (ev) => {
-      this._userLogout(ev);
-    });
+    document.addEventListener('firebase-signin', this._isSignIn);
+    document.addEventListener('firebase-signout', this._isSignOut);
     const firebaseAreYouLoggedEvent = new Event('firebase-are-you-logged');
     document.dispatchEvent(firebaseAreYouLoggedEvent);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener('firebase-signin', (ev) => {
-      this._userLogged(ev);
-      this.getData();
+    document.removeEventListener('firebase-signin', this._isSignIn);
+    document.removeEventListener('firebase-signout', this._isSignOut);
+    this.shadowRoot.querySelectorAll('#elements-layer a').forEach((el)=> {
+      el.removeEventListener('click', this._selectedElement);
     });
-    document.removeEventListener('firebase-signout', (ev) => {
-      this._userLogout(ev);
+  }
+
+  updated(changedProperties) {
+    changedProperties.forEach((oldValue, propName) => {
+      if (propName === 'path' && this.elId !== oldValue && oldValue !== undefined) {
+        this.getData();
+      }
     });
   }
 
@@ -111,6 +125,12 @@ export class FirebaseAutolist extends LitElement {
     this.data = null;
   }
 
+  _selectedElement(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    document.dispatchEvent(new CustomEvent('firebase-autolist-selectid', {detail: {id: ev.target.name, objId: this.id}}));
+  }
+
   _getData() {
     this.shadowRoot.querySelector('#elements-layer').innerHTML = '';
     if (this.fieldKey === '') {
@@ -120,22 +140,19 @@ export class FirebaseAutolist extends LitElement {
     }
 
     this.shadowRoot.querySelectorAll('#elements-layer a').forEach((el)=> {
-      el.addEventListener('click', (ev) => {
-        ev.preventDefault();
-        ev.stopPropagation();
-        document.dispatchEvent(new CustomEvent('firebase-autolist-selectid', {detail: {id: ev.target.name, objId: this.id}}));
-      });
+      el.addEventListener('click', this._selectedElement);
     });
     this.shadowRoot.querySelector('#spinner').active = false;
   }
 
   _getDataFields() {
     let data = this.data;
+    data.shift();
     if (Array.isArray(data)) {
       data.forEach((elem, id) => {
         this.log(JSON.stringify(elem) + ' - ' + id);
         const liEl = document.createElement('li');
-        liEl.innerHTML = `<a href='#' name='${id}'>[${id}] ${elem[this.fieldKey]}</a>`;
+        liEl.innerHTML = `<a href='#' name='${id}'>[${id+1}] ${elem[this.fieldKey]}</a>`;
         this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
       });
     } else {
@@ -146,14 +163,15 @@ export class FirebaseAutolist extends LitElement {
   _getDataKeys(id) {
     let data = (id) ? this.data[id] : this.data;
     let keys = Object.keys(data);
-    keys.forEach((elem) => {
+    for (let elem of keys) {
       this.log(elem);
-      if (elem !== '0') {
+      if (elem !== '0' || !Array.isArray(data[elem])) {
+        const value = (Array.isArray(data[elem])) ? elem : data[elem];
         const liEl = document.createElement('li');
-        liEl.innerHTML = `<a href='#' name='${elem}'>${elem}</a>`;
+        liEl.innerHTML = `<a href='#' name='${elem}'>${value}</a>`;
         this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
       }
-    });
+    }
   }
 
   render() {
