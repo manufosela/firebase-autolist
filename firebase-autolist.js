@@ -175,9 +175,10 @@ export class FirebaseAutolist extends LitElement {
   }
 
   render() {
+    const path = this.path.split('/');
     return html`
       ${this.dataUser !== null ? html` 
-        <h3 class='path'>${this.path.replace(/^\//, '')} <paper-spinner id="spinner" class="blue" active></paper-spinner></h3>
+        <h3 class='path'>${path[path.length - 1]} <paper-spinner id="spinner" class="blue" active></paper-spinner></h3>
         <div class="container">
           <section>
             <ul id="elements-layer">
