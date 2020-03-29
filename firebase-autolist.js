@@ -147,12 +147,14 @@ export class FirebaseAutolist extends LitElement {
 
   _getDataFields() {
     let data = this.data;
-    data.shift();
+    if (Array.isArray(data)) {
+      data.shift();
+    }
     if (Array.isArray(data)) {
       data.forEach((elem, id) => {
         this.log(JSON.stringify(elem) + ' - ' + id);
         const liEl = document.createElement('li');
-        liEl.innerHTML = `<a href='#' name='${id}'>[${id+1}] ${elem[this.fieldKey]}</a>`;
+        liEl.innerHTML = `<a href='#' name='${id}'>[${id}] ${elem[this.fieldKey]}</a>`;
         this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
       });
     } else {
