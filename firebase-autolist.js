@@ -149,8 +149,6 @@ export class FirebaseAutolist extends LitElement {
     let data = this.data;
     if (Array.isArray(data)) {
       data.shift();
-    }
-    if (Array.isArray(data)) {
       data.forEach((elem, id) => {
         this.log(JSON.stringify(elem) + ' - ' + id);
         const liEl = document.createElement('li');
@@ -167,7 +165,7 @@ export class FirebaseAutolist extends LitElement {
     let keys = Object.keys(data);
     for (let elem of keys) {
       this.log(elem);
-      if (elem !== '0' || !Array.isArray(data[elem])) {
+      if (elem !== '0' || ['string', 'number'].includes(typeof(data[elem]))) {
         const value = (Array.isArray(data[elem])) ? elem : data[elem];
         const liEl = document.createElement('li');
         liEl.innerHTML = `<a href='#' name='${elem}'>${value}</a>`;
