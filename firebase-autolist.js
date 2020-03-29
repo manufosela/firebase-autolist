@@ -166,7 +166,7 @@ export class FirebaseAutolist extends LitElement {
     for (let elem of keys) {
       this.log(elem);
       if (elem !== '0' || ['string', 'number'].includes(typeof(data[elem]))) {
-        const value = (Array.isArray(data[elem])) ? elem : data[elem];
+        const value = ['string', 'number'].includes(typeof(data[elem])) ? elem : data[elem];
         const liEl = document.createElement('li');
         liEl.innerHTML = `<a href='#' name='${elem}'>${value}</a>`;
         this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
