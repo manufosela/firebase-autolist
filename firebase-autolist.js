@@ -23,6 +23,10 @@ export class FirebaseAutolist extends LitElement {
       path: {
         type: String
       },
+      showId: {
+        type: Boolean,
+        attribute: 'show-id'
+      },
       fieldKey: {
         typer: String,
         attribute: 'field-key'
@@ -37,6 +41,11 @@ export class FirebaseAutolist extends LitElement {
   }
 
   static get styles() {
+    /*
+      CSS-VARIABLES
+      --font-size: 1rem
+      --link-hover: #0A7CAF
+    */
     return css`
       :host {
         display: block;
@@ -44,13 +53,40 @@ export class FirebaseAutolist extends LitElement {
       paper-spinner.blue::shadow .circle {
         border-color: var(--spinner-color, #4285f4);
       }
+      ul{
+        margin:0px;
+      }
+      li{
+        font-size:var(--font-size,1rem);
+        margin-left:25px;
+        padding:0px;
+        list-style:none;
+        line-height:30px;
+      }
+      li a{
+       text-decoration:none;
+      }
+      li a:hover{
+        color:var(--link-hover, #0A7CAF);
+        padding:5px;
+        -moz-box-shadow: 0px 0px 12px #9e9ea3;
+        -webkit-box-shadow: 0px 0px 12px #9e9ea3;
+        box-shadow: 0px 0px 12px #9e9ea3;
+        border:none 0px #000000;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        font-size:110%;
+      }
+
     `;
   }
 
   constructor() {
     super();
-    this.path = '/';
+    this.path = '';
     this.fieldKey = '';
+    this.showId = false;
 
     this.data = null;
     this.dataUser = null;
@@ -102,15 +138,19 @@ export class FirebaseAutolist extends LitElement {
   }
 
   getData() {
-    let starredStatusRef = firebase.database().ref(this.path);
-    starredStatusRef.on('value', (snapshot) => {
-      this.data = snapshot.val();
-      if (this.data) {
-        this._getData();
-      } else {
-        this.shadowRoot.querySelector('#elements-layer').innerHTML = 'No data found';
-      }
-    });
+    if (this.path !== '') {
+      let starredStatusRef = firebase.database().ref(this.path);
+      starredStatusRef.on('value', (snapshot) => {
+        this.data = snapshot.val();
+        if (this.data) {
+          this._getData();
+        } else {
+          this.shadowRoot.querySelector('#elements-layer').innerHTML = 'No data found';
+        }
+      });
+    } else {
+      this.log('path not defined');
+    }
   }
 
   _userLogged(obj) {
@@ -152,7 +192,7 @@ export class FirebaseAutolist extends LitElement {
       data.forEach((elem, id) => {
         this.log(JSON.stringify(elem) + ' - ' + id);
         const liEl = document.createElement('li');
-        liEl.innerHTML = `<a href='#' name='${id}'>[${id}] ${elem[this.fieldKey]}</a>`;
+        liEl.innerHTML = `<a href='#' name='${id}'>${(this.showId) ? `[${id}]` : ''} ${elem[this.fieldKey]}</a>`;
         this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
       });
     } else {
