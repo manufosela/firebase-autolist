@@ -58,7 +58,6 @@ export class FirebaseAutolist extends LitElement {
       }
       li{
         font-size:var(--font-size,1rem);
-        margin-left:25px;
         padding:0px;
         list-style:none;
         line-height:30px;
@@ -218,7 +217,7 @@ export class FirebaseAutolist extends LitElement {
     const path = this.path.split('/');
     return html`
       ${this.dataUser !== null ? html` 
-        <h3 class='path'>${path[path.length - 1]} <paper-spinner id="spinner" class="blue" active></paper-spinner></h3>
+        ${(this.path !== '') ? html`<h3 class='path'>${path[path.length - 1]} <paper-spinner id="spinner" class="blue" active></paper-spinner></h3>` : html``}
         <div class="container">
           <section>
             <ul id="elements-layer">
