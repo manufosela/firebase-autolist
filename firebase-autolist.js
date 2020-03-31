@@ -45,6 +45,8 @@ export class FirebaseAutolist extends LitElement {
       CSS-VARIABLES
       --font-size: 1rem
       --link-hover: #0A7CAF
+      --selected-color: #F30
+      --selected-bg: #888
     */
     return css`
       :host {
@@ -65,7 +67,7 @@ export class FirebaseAutolist extends LitElement {
       li a{
        text-decoration:none;
       }
-      li a:hover{
+      li a:hover, .selected{
         color:var(--link-hover, #0A7CAF);
         padding:5px;
         -moz-box-shadow: 0px 0px 12px #9e9ea3;
@@ -76,6 +78,10 @@ export class FirebaseAutolist extends LitElement {
         -webkit-border-radius: 3px;
         border-radius: 3px;
         font-size:110%;
+      }
+      .selected {
+        color: var(--selected-color, #F30);
+        background: var(--selected-bg, #888);
       }
 
     `;
@@ -168,6 +174,11 @@ export class FirebaseAutolist extends LitElement {
     ev.preventDefault();
     ev.stopPropagation();
     document.dispatchEvent(new CustomEvent('firebase-autolist-selectid', {detail: {id: ev.target.name, objId: this.id}}));
+    const arrayLink = this.shadowRoot.querySelectorAll('#elements-layer li a');
+    for (let link of arrayLink) {
+      link.classList.remove('selected');
+    }
+    ev.target.classList.add('selected');
   }
 
   _getData() {
