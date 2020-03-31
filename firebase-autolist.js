@@ -109,8 +109,10 @@ export class FirebaseAutolist extends LitElement {
   }
 
   _isSignIn(ev) {
-    this._userLogged(ev);
-    this.getData();
+    if (!this.user) {
+      this._userLogged(ev);
+      this.getData();
+    }
   }
 
   _isSignOut(ev) {
