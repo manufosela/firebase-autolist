@@ -32,6 +32,14 @@ You can use [firebase-loginbutton](https://github.com/manufosela/firebase-loginb
 ## Events
 When element is clicked dispatch **firebase-autolist-selectid** with payload element id and object id
 
+## CSS-VARIABLES
+```css
+      --font-size: 1rem
+      --link-hover: #0A7CAF
+      --selected-color: #F30
+      --selected-bg: #888
+```
+
 ## Install the Polymer-CLI
 
 First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) and npm (packaged with [Node.js](https://nodejs.org)) installed. Run `npm install` to install your element's dependencies, then run `polymer serve` to serve your element locally.
