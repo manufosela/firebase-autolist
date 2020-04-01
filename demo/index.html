@@ -26,6 +26,12 @@
       .attributes {
         padding-left: 20px;
       }
+      .layer {
+        display:flex;
+      }
+      firebase-autolist {
+        margin: 0 40px;
+      }
     </style>
   </head>
 
@@ -52,10 +58,12 @@
       <firebase-loginbutton api-key="AIzaSyCVpVjyqS9qNcTsTDuQ8qBL1i4VPy5CdpY" domain="coleccion-peliculas"
       messaging-sender-id="852819704247" app-id="1:852819704247:web:9ac0a093401920ed"></firebase-loginbutton>
 
-      <firebase-autolist id="autolist-1" path="/"></firebase-autolist>
+      <div class="layer">
+        <firebase-autolist id="autolist-1" path="/"></firebase-autolist>
 
-      <firebase-autolist id="autolist-2" path="/peliculas" field-key="C02-título"></firebase-autolist>
-
+        <firebase-autolist id="autolist-2" path="/peliculas" field-key="C02-título"></firebase-autolist>
+      </div>
+      <button id="cssBtn" onclick="changecss()">change style element 0</button>
       <div id="info"></div>
 
       <script>
@@ -68,6 +76,13 @@
             autoform.setAttribute('path', `/${ev.detail.id}`);
           }
         });
+
+        
+        function changecss(){
+          const customEvent = new CustomEvent('setcss-autolist-element', {detail: {id:'autolist-2', name:'[name="0"]', style:'color:green; font-weight:bold;'}});
+          document.dispatchEvent(customEvent);
+        }
+
       </script>
     </div>
   </body>

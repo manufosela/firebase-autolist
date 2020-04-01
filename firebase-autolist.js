@@ -100,6 +100,7 @@ export class FirebaseAutolist extends LitElement {
     this._isSignIn = this._isSignIn.bind(this);
     this._isSignOut = this._isSignOut.bind(this);
     this._selectedElement = this._selectedElement.bind(this);
+    this._setCssElement = this._setCssElement.bind(this);
   }
 
   log(msg) {
@@ -119,11 +120,25 @@ export class FirebaseAutolist extends LitElement {
     this._userLogout(ev);
   }
 
+  _setCssElement(ev) {
+    if (ev.detail && ev.detail.id === this.id) {
+      console.log(ev.detail);
+      if (ev.detail.name && ev.detail.style) {
+        const selector = ev.detail.name;
+        const style = ev.detail.style;
+        if (this.shadowRoot.querySelector(selector)) {
+          this.shadowRoot.querySelector(selector).style = style;
+        }
+      }
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener('firebase-signin', this._isSignIn);
     document.addEventListener('firebase-signout', this._isSignOut);
-    const firebaseAreYouLoggedEvent = new Event('firebase-are-you-logged');
+    document.addEventListener('setcss-autolist-element', this._setCssElement);
+    const firebaseAreYouLoggedEvent = new CustomEvent('firebase-are-you-logged');
     document.dispatchEvent(firebaseAreYouLoggedEvent);
   }
 
@@ -131,6 +146,7 @@ export class FirebaseAutolist extends LitElement {
     super.disconnectedCallback();
     document.removeEventListener('firebase-signin', this._isSignIn);
     document.removeEventListener('firebase-signout', this._isSignOut);
+    document.removeEventListener('setcss-autolist-element', this._setCssElement);
     this.shadowRoot.querySelectorAll('#elements-layer a').forEach((el)=> {
       el.removeEventListener('click', this._selectedElement);
     });
