@@ -163,7 +163,7 @@ export class FirebaseAutolist extends LitElement {
   getData() {
     if (this.path !== '') {
       let starredStatusRef = firebase.database().ref(this.path);
-      starredStatusRef.on('value', (snapshot) => {
+      starredStatusRef.once('value').then((snapshot) => {
         this.data = snapshot.val();
         if (this.data) {
           this._getData();
