@@ -218,6 +218,7 @@ export class FirebaseAutolist extends LitElement {
     if (Array.isArray(data)) {
       data.shift();
       data.forEach((elem, id) => {
+        id++; // Porque eliminamos el elemento 0 que es que se usa de referencia
         this.log(JSON.stringify(elem) + ' - ' + id);
         const liEl = document.createElement('li');
         liEl.innerHTML = `<a href='#' name='${id}'>${(this.showId) ? `[${id}]` : ''} ${elem[this.fieldKey]}</a>`;
