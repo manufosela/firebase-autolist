@@ -122,7 +122,6 @@ export class FirebaseAutolist extends LitElement {
 
   _setCssElement(ev) {
     if (ev.detail && ev.detail.id === this.id) {
-      console.log(ev.detail);
       if (ev.detail.name && ev.detail.style) {
         const selector = ev.detail.name;
         const style = ev.detail.style;
@@ -170,6 +169,8 @@ export class FirebaseAutolist extends LitElement {
         } else {
           this.shadowRoot.querySelector('#elements-layer').innerHTML = 'No data found';
         }
+        const firebaseAutolistFinish = new CustomEvent('firebase-autolist-finish');
+        document.dispatchEvent(firebaseAutolistFinish);
       });
     } else {
       this.log('path not defined');
