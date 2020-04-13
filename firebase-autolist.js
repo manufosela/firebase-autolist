@@ -31,6 +31,9 @@ export class FirebaseAutolist extends LitElement {
         typer: String,
         attribute: 'field-key'
       },
+      select: {
+        type: String
+      },
       data: {
         type: Object
       },
@@ -92,6 +95,7 @@ export class FirebaseAutolist extends LitElement {
     this.path = '';
     this.fieldKey = '';
     this.showId = false;
+    this.select = '';
 
     this.data = null;
     this.dataUser = null;
@@ -221,8 +225,9 @@ export class FirebaseAutolist extends LitElement {
       data.forEach((elem, id) => {
         id++; // Porque eliminamos el elemento 0 que es que se usa de referencia
         this.log(JSON.stringify(elem) + ' - ' + id);
+        const classSelect = (this.select === elem[this.fieldKey]) ? 'class="selected"' : '';
         const liEl = document.createElement('li');
-        liEl.innerHTML = `<a href='#' name='${id}'>${(this.showId) ? `[${id}]` : ''} ${elem[this.fieldKey]}</a>`;
+        liEl.innerHTML = `<a href='#' ${classSelect} name='${id}'>${(this.showId) ? `[${id}]` : ''} ${elem[this.fieldKey]}</a>`;
         this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
       });
     } else {
@@ -238,7 +243,8 @@ export class FirebaseAutolist extends LitElement {
       if (elem !== '0' || ['string', 'number'].includes(typeof(data[elem]))) {
         const value = ['string', 'number'].includes(typeof(data[elem])) ? data[elem] : elem;
         const liEl = document.createElement('li');
-        liEl.innerHTML = `<a href='#' name='${elem}'>${value}</a>`;
+        const classSelect = (this.select === value) ? 'class="selected"' : '';
+        liEl.innerHTML = `<a href='#' ${classSelect} name='${elem}'>${value}</a>`;
         this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
       }
     }
@@ -248,7 +254,7 @@ export class FirebaseAutolist extends LitElement {
     const path = this.path.split('/');
     return html`
       ${this.dataUser !== null ? html` 
-        ${(this.path !== '') ? html`<h3 class='path'>${path[path.length - 1]} <paper-spinner id="spinner" class="blue" active></paper-spinner></h3>` : html``}
+        ${(this.path !== '') ? html`<h3 class='path'>${path[path.length - 1].replace('/_/g', ' ')} <paper-spinner id="spinner" class="blue" active></paper-spinner></h3>` : html``}
         <div class="container">
           <section>
             <ul id="elements-layer">
