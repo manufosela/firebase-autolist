@@ -22,7 +22,7 @@ Autolistado de los elementos del path de una base de datos de Firebase mostrando
 -->
 
 ```html
-<firebase-autolist path="/peliculas" field-key="titulo"></firebase-autolist>
+<firebase-autolist path="/peliculas" field-key="titulo" height="100"></firebase-autolist>
 ```
 
 ## Dependencies
