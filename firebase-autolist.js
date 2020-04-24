@@ -34,6 +34,13 @@ export class FirebaseAutolist extends LitElement {
       select: {
         type: String
       },
+      hgt: {
+        type: Number,
+        attribute: 'height'
+      },
+      search: {
+        type: Boolean
+      },
       data: {
         type: Object
       },
@@ -86,7 +93,6 @@ export class FirebaseAutolist extends LitElement {
         color: var(--selected-color, #F30);
         background: var(--selected-bg, #888);
       }
-
     `;
   }
 
@@ -96,6 +102,8 @@ export class FirebaseAutolist extends LitElement {
     this.fieldKey = '';
     this.showId = false;
     this.select = '';
+    this.search = false;
+    this.hgt = 0;
 
     this.data = null;
     this.dataUser = null;
@@ -252,9 +260,14 @@ export class FirebaseAutolist extends LitElement {
 
   render() {
     const path = this.path.split('/');
+    const hgt = (this.hgt > 0 && this.hgt <= 100) ? '.container { height:' + this.hgt + 'vh; overflow-y: scroll; overflow-x: hidden; }' : '';
     return html`
       ${this.dataUser !== null ? html` 
+        ${this.search ? html`<input type="text" name="search">` : html``}
         ${(this.path !== '') ? html`<h3 class='path'>${path[path.length - 1].replace('/_/g', ' ')} <paper-spinner id="spinner" class="blue" active></paper-spinner></h3>` : html``}
+        <style>
+          ${hgt}
+        </style>
         <div class="container">
           <section>
             <ul id="elements-layer">
