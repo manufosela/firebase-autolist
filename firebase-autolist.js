@@ -67,6 +67,7 @@ export class FirebaseAutolist extends LitElement {
       }
       ul{
         margin:0px;
+        padding:0;
       }
       li{
         font-size:var(--font-size,1rem);
