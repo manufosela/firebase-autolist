@@ -34,7 +34,7 @@ export class FirebaseAutolist extends LitElement {
       select: {
         type: String
       },
-      hgt: {
+      height: {
         type: Number,
         attribute: 'height'
       },
@@ -104,7 +104,7 @@ export class FirebaseAutolist extends LitElement {
     this.showId = false;
     this.select = '';
     this.search = false;
-    this.hgt = 0;
+    this.height = 0;
 
     this.data = null;
     this.dataUser = null;
@@ -155,13 +155,13 @@ export class FirebaseAutolist extends LitElement {
   }
 
   disconnectedCallback() {
-    super.disconnectedCallback();
     document.removeEventListener('firebase-signin', this._isSignIn);
     document.removeEventListener('firebase-signout', this._isSignOut);
     document.removeEventListener('setcss-autolist-element', this._setCssElement);
     this.shadowRoot.querySelectorAll('#elements-layer a').forEach((el)=> {
       el.removeEventListener('click', this._selectedElement);
     });
+    super.disconnectedCallback();
   }
 
   updated(changedProperties) {
@@ -261,13 +261,13 @@ export class FirebaseAutolist extends LitElement {
 
   render() {
     const path = this.path.split('/');
-    const hgt = (this.hgt > 0 && this.hgt <= 100) ? '.container { height:' + this.hgt + 'vh; overflow-y: scroll; overflow-x: hidden; }' : '';
+    const height = (this.height > 0 && this.height <= 100) ? '.container { height:' + this.height + 'vh; overflow-y: scroll; overflow-x: hidden; }' : '';
     return html`
       ${this.dataUser !== null ? html` 
         ${this.search ? html`<input type="text" name="search">` : html``}
         ${(this.path !== '') ? html`<h3 class='path'>${path[path.length - 1].replace('/_/g', ' ')} <paper-spinner id="spinner" class="blue" active></paper-spinner></h3>` : html``}
         <style>
-          ${hgt}
+          ${height}
         </style>
         <div class="container">
           <section>
