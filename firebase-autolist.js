@@ -38,6 +38,10 @@ export class FirebaseAutolist extends LitElement {
         type: Number,
         attribute: 'height'
       },
+      autoRefresh: {
+        type: Boolean,
+        attribute: 'auto-refresh'
+      },
       search: {
         type: Boolean
       },
@@ -105,6 +109,7 @@ export class FirebaseAutolist extends LitElement {
     this.select = '';
     this.search = false;
     this.height = 0;
+    this.autoRefresh = false;
 
     this.data = null;
     this.dataUser = null;
@@ -172,19 +177,25 @@ export class FirebaseAutolist extends LitElement {
     });
   }
 
+  processData(snapshot) {
+    this.data = snapshot.val();
+    if (this.data) {
+      this._getData();
+    } else {
+      this.shadowRoot.querySelector('#elements-layer').innerHTML = 'No data found';
+    }
+    const firebaseAutolistFinish = new CustomEvent('firebase-autolist-finish');
+    document.dispatchEvent(firebaseAutolistFinish);
+  }
+
   getData() {
     if (this.path !== '') {
       let starredStatusRef = firebase.database().ref(this.path);
-      starredStatusRef.once('value').then((snapshot) => {
-        this.data = snapshot.val();
-        if (this.data) {
-          this._getData();
-        } else {
-          this.shadowRoot.querySelector('#elements-layer').innerHTML = 'No data found';
-        }
-        const firebaseAutolistFinish = new CustomEvent('firebase-autolist-finish');
-        document.dispatchEvent(firebaseAutolistFinish);
-      });
+      if (this.autoRefresh) {
+        starredStatusRef.on('value', (snapshot) => this.processData(snapshot));
+      } else {
+        starredStatusRef.once('value').then((snapshot) => this.processData(snapshot));
+      }
     } else {
       this.log('path not defined');
     }
@@ -205,7 +216,7 @@ export class FirebaseAutolist extends LitElement {
   _selectedElement(ev) {
     ev.preventDefault();
     ev.stopPropagation();
-    document.dispatchEvent(new CustomEvent('firebase-autolist-selectid', {detail: {id: ev.target.name, objId: this.id}}));
+    document.dispatchEvent(new CustomEvent('firebase-autolist-selectid', {detail: {id: ev.target.name, objId: this.id, value: ev.target.value}}));
     const arrayLink = this.shadowRoot.querySelectorAll('#elements-layer li a');
     for (let link of arrayLink) {
       link.classList.remove('selected');
