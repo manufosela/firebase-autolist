@@ -268,21 +268,25 @@ export class FirebaseAutolist extends LitElement {
     }
   }
 
+  _createModal(ev) {
+    const modal = document.createElement('div');
+    modal.id = 'modal-delete-element';
+    modal.classList.add('modal');
+    modal.style.top = ev.clientY + 'px';
+    modal.style.left = ev.clientX + 'px';
+  }
+
   _deleteElement(ev) {
     ev.preventDefault();
     ev.stopPropagation();
     this._closeModal();
     const field = ev.target.title.replace('delete ', '');
     const id = ev.target.dataset.id;
-    const modal = document.createElement('div');
-    modal.id = 'modal-delete-element';
-    modal.classList.add('modal');
+    const modal = this._createModal(ev);
     modal.innerHTML = `
       <div data-id="${id}">¿Quieres borrar el elemento ${field}?</div>
       <button id="deleteSi">Sí</button><button id="deleteNo">No</button>
     `;
-    modal.style.top = (ev.clientY - 75) + 'px';
-    modal.style.left = (ev.clientX - 100) + 'px';
     this.shadowRoot.appendChild(modal);
     document.addEventListener('click', this._closeModal);
     this.shadowRoot.querySelector('#deleteSi').addEventListener('click', () => this.deleteIdFromFirebase(id));
