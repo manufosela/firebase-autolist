@@ -274,6 +274,7 @@ export class FirebaseAutolist extends LitElement {
     modal.classList.add('modal');
     modal.style.top = ev.clientY + 'px';
     modal.style.left = ev.clientX + 'px';
+    return modal;
   }
 
   _deleteElement(ev) {
