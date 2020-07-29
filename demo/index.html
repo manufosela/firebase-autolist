@@ -61,9 +61,9 @@
       messaging-sender-id="852819704247" app-id="1:852819704247:web:9ac0a093401920ed"></firebase-loginbutton>
 
       <div class="layer">
-        <firebase-autolist id="autolist-1" path="/" select="peliculas" auto-refresh></firebase-autolist>
+        <firebase-autolist id="autolist-1" path="/" select="peliculas"></firebase-autolist>
 
-        <firebase-autolist id="autolist-2" height="20" path="/peliculas" field-key="C02-título" select="Bellepoc"></firebase-autolist>
+        <firebase-autolist id="autolist-2" height="20" path="/peliculas" field-key="C02-título" select="Bellepoc" auto-refresh show-delete></firebase-autolist>
       </div>
       <button id="cssBtn" onclick="changecss()">change style first element of peliculas</button>
       <div id="info"></div>

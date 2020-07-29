@@ -42,6 +42,10 @@ export class FirebaseAutolist extends LitElement {
         type: Boolean,
         attribute: 'auto-refresh'
       },
+      showDelete: {
+        type: Boolean,
+        attribute: 'show-delete'
+      },
       search: {
         type: Boolean
       },
@@ -82,7 +86,7 @@ export class FirebaseAutolist extends LitElement {
       li a{
        text-decoration:none;
       }
-      li a:hover, .selected{
+      li a.element:hover, .selected{
         color:var(--link-hover, #0A7CAF);
         padding:5px;
         -moz-box-shadow: 0px 0px 12px #9e9ea3;
@@ -98,6 +102,21 @@ export class FirebaseAutolist extends LitElement {
         color: var(--selected-color, #F30);
         background: var(--selected-bg, #888);
       }
+      .deleteBtn {
+        font-size: 0.7rem;
+        position: relative;
+        top: -12px;
+        cursor: pointer;
+      }
+      .modal {
+        position: absolute;
+        width: 150px;
+        background: #FFF;
+        font-size: 1rem;
+        border: 3px outset;
+        border-radius: 10px;
+        padding: 5px;
+      }
     `;
   }
 
@@ -110,6 +129,7 @@ export class FirebaseAutolist extends LitElement {
     this.search = false;
     this.height = 0;
     this.autoRefresh = false;
+    this.showDelete = false;
 
     this.data = null;
     this.dataUser = null;
@@ -119,6 +139,8 @@ export class FirebaseAutolist extends LitElement {
     this._isSignOut = this._isSignOut.bind(this);
     this._selectedElement = this._selectedElement.bind(this);
     this._setCssElement = this._setCssElement.bind(this);
+    this._deleteElement = this._deleteElement.bind(this);
+    this._closeModal = this._closeModal.bind(this);
   }
 
   log(msg) {
@@ -163,8 +185,12 @@ export class FirebaseAutolist extends LitElement {
     document.removeEventListener('firebase-signin', this._isSignIn);
     document.removeEventListener('firebase-signout', this._isSignOut);
     document.removeEventListener('setcss-autolist-element', this._setCssElement);
-    this.shadowRoot.querySelectorAll('#elements-layer a').forEach((el)=> {
+    document.removeEventListener('click', this._closeModal);
+    this.shadowRoot.querySelectorAll('#elements-layer a.element').forEach((el)=> {
       el.removeEventListener('click', this._selectedElement);
+    });
+    this.shadowRoot.querySelectorAll('#elements-layer a.deleteBtn').forEach((el)=> {
+      el.removeEventListener('click', this._deleteElement);
     });
     super.disconnectedCallback();
   }
@@ -201,6 +227,17 @@ export class FirebaseAutolist extends LitElement {
     }
   }
 
+  deleteIdFromFirebase(id) {
+    const path = (this.path[this.path.length - 1] === '/') ? this.path : this.path + '/';
+    console.log(path + id);
+    const ref = firebase.database().ref(path + id);
+    ref.remove((error)=> {
+      if (error === null) {
+        this.getData();
+      }
+    });
+  }
+
   _userLogged(obj) {
     if (!this.user && obj.detail.user) {
       this.user = obj.detail.user.displayName;
@@ -217,11 +254,38 @@ export class FirebaseAutolist extends LitElement {
     ev.preventDefault();
     ev.stopPropagation();
     document.dispatchEvent(new CustomEvent('firebase-autolist-selectid', {detail: {id: ev.target.name, objId: this.id, value: ev.target.value}}));
-    const arrayLink = this.shadowRoot.querySelectorAll('#elements-layer li a');
+    const arrayLink = this.shadowRoot.querySelectorAll('#elements-layer li a.element');
     for (let link of arrayLink) {
       link.classList.remove('selected');
     }
     ev.target.classList.add('selected');
+  }
+
+  _closeModal(ev) {
+    const modal = this.shadowRoot.querySelector('#modal-delete-element');
+    if (modal) {
+      modal.remove();
+    }
+  }
+
+  _deleteElement(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this._closeModal();
+    const field = ev.target.title.replace('delete ', '');
+    const id = ev.target.dataset.id;
+    const modal = document.createElement('div');
+    modal.id = 'modal-delete-element';
+    modal.classList.add('modal');
+    modal.innerHTML = `
+      <div data-id="${id}">¿Quieres borrar el elemento ${field}?</div>
+      <button id="deleteSi">Sí</button><button id="deleteNo">No</button>
+    `;
+    modal.style.top = (ev.clientY - 75) + 'px';
+    modal.style.left = (ev.clientX - 100) + 'px';
+    this.shadowRoot.appendChild(modal);
+    document.addEventListener('click', this._closeModal);
+    this.shadowRoot.querySelector('#deleteSi').addEventListener('click', () => this.deleteIdFromFirebase(id));
   }
 
   _getData() {
@@ -232,8 +296,11 @@ export class FirebaseAutolist extends LitElement {
       this._getDataFields();
     }
 
-    this.shadowRoot.querySelectorAll('#elements-layer a').forEach((el)=> {
+    this.shadowRoot.querySelectorAll('#elements-layer a.element').forEach((el)=> {
       el.addEventListener('click', this._selectedElement);
+    });
+    this.shadowRoot.querySelectorAll('#elements-layer a.deleteBtn').forEach((el)=> {
+      el.addEventListener('click', this._deleteElement);
     });
     this.shadowRoot.querySelector('#spinner').active = false;
   }
@@ -247,7 +314,9 @@ export class FirebaseAutolist extends LitElement {
         this.log(JSON.stringify(elem) + ' - ' + id);
         const classSelect = (this.select === elem[this.fieldKey]) ? 'class="selected"' : '';
         const liEl = document.createElement('li');
-        liEl.innerHTML = `<a href='#' ${classSelect} name='${id}'>${(this.showId) ? `[${id}]` : ''} ${elem[this.fieldKey]}</a>`;
+        const deleteBtn = (this.showDelete) ? `<a class="deleteBtn" data-id="${id}" title="delete ${elem[this.fieldKey]}">X</a>` : '';
+        liEl.innerHTML = `<a href='#' ${classSelect} class="element" name='${id}'>${(this.showId) ? `[${id}]` : ''} ${elem[this.fieldKey]}</a>${deleteBtn}`;
+
         this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
       });
     } else {
@@ -263,8 +332,9 @@ export class FirebaseAutolist extends LitElement {
       if (elem !== '0' || ['string', 'number'].includes(typeof(data[elem]))) {
         const value = ['string', 'number'].includes(typeof(data[elem])) ? data[elem] : elem;
         const liEl = document.createElement('li');
-        const classSelect = (this.select === value) ? 'class="selected"' : '';
-        liEl.innerHTML = `<a href='#' ${classSelect} name='${elem}'>${value}</a>`;
+        const classSelect = (this.select === value) ? 'class="element selected"' : '';
+        const deleteBtn = (this.showDelete) ? `<a class="deleteBtn" data-id="${elem}" title="delete ${value}">X</a>` : '';
+        liEl.innerHTML = `<a href='#' ${classSelect} class="element" name='${elem}'>${value}</a>${deleteBtn}`;
         this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
       }
     }
