@@ -31,8 +31,13 @@ export class FirebaseAutolist extends LitElement {
         typer: String,
         attribute: 'field-key'
       },
-      select: {
-        type: String
+      valSelected: {
+        type: String,
+        attribute: 'val-selected'
+      },
+      selectView: {
+        type: Boolean,
+        attribute: 'select-view'
       },
       height: {
         type: Number,
@@ -125,7 +130,7 @@ export class FirebaseAutolist extends LitElement {
     this.path = '';
     this.fieldKey = '';
     this.showId = false;
-    this.select = '';
+    this.valSelected = '';
     this.search = false;
     this.height = 0;
     this.autoRefresh = false;
@@ -210,7 +215,8 @@ export class FirebaseAutolist extends LitElement {
     } else {
       this.shadowRoot.querySelector('#elements-layer').innerHTML = 'No data found';
     }
-    const firebaseAutolistFinish = new CustomEvent('firebase-autolist-finish');
+    const id = this.id || this.name || 'firebase-autoform-without-id';
+    const firebaseAutolistFinish = new CustomEvent('firebase-autolist-finish', {detail: {id: id}});
     document.dispatchEvent(firebaseAutolistFinish);
   }
 
@@ -317,7 +323,7 @@ export class FirebaseAutolist extends LitElement {
       data.forEach((elem, id) => {
         id++; // Porque eliminamos el elemento 0 que es que se usa de referencia
         this.log(JSON.stringify(elem) + ' - ' + id);
-        const classSelect = (this.select === elem[this.fieldKey]) ? 'class="selected"' : '';
+        const classSelect = (this.valSelected === elem[this.fieldKey]) ? 'class="selected"' : '';
         const liEl = document.createElement('li');
         const deleteBtn = (this.showDelete) ? `<a class="deleteBtn" data-id="${id}" title="delete ${elem[this.fieldKey]}">X</a>` : '';
         liEl.innerHTML = `<a href='#' ${classSelect} class="element" name='${id}'>${(this.showId) ? `[${id}]` : ''} ${elem[this.fieldKey]}</a>${deleteBtn}`;
@@ -337,7 +343,7 @@ export class FirebaseAutolist extends LitElement {
       if (elem !== '0' || ['string', 'number'].includes(typeof(data[elem]))) {
         const value = ['string', 'number'].includes(typeof(data[elem])) ? data[elem] : elem;
         const liEl = document.createElement('li');
-        const classSelect = (this.select === value) ? 'class="element selected"' : '';
+        const classSelect = (this.valSelected === value) ? 'class="element selected"' : '';
         const deleteBtn = (this.showDelete) ? `<a class="deleteBtn" data-id="${elem}" title="delete ${value}">X</a>` : '';
         liEl.innerHTML = `<a href='#' ${classSelect} class="element" name='${elem}'>${value}</a>${deleteBtn}`;
         this.shadowRoot.querySelector('#elements-layer').appendChild(liEl);
@@ -347,15 +353,12 @@ export class FirebaseAutolist extends LitElement {
 
   render() {
     const path = this.path.split('/');
-    const height = (this.height > 0 && this.height <= 100) ? '.container { height:' + this.height + 'vh; overflow-y: scroll; overflow-x: hidden; }' : '';
+    const height = (this.height > 0 && this.height <= 100) ? 'height:' + this.height + 'vh; overflow-y: scroll; overflow-x: hidden;' : '';
     return html`
       ${this.dataUser !== null ? html` 
         ${this.search ? html`<input type="text" name="search">` : html``}
         ${(this.path !== '') ? html`<h3 class='path'>${path[path.length - 1].replace('/_/g', ' ')} <paper-spinner id="spinner" class="blue" active></paper-spinner></h3>` : html``}
-        <style>
-          ${height}
-        </style>
-        <div class="container">
+        <div style="${height}">
           <section>
             <ul id="elements-layer">
             </ul>
