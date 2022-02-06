@@ -1,8 +1,9 @@
 {
   "name": "firebase-autolist",
   "description": "Lit-Element webcomponent firebase-autolist",
-  "version": "1.9.0",
+  "version": "2.0.0",
   "main": "firebase-autolist.js",
+  "module": "firebase-autolist.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/manufosela/firebase-autolist"
@@ -17,24 +18,55 @@
     "url": "https://github.com/manufosela/firebase-autolist/issues"
   },
   "homepage": "https://github.com/manufosela/firebase-autolist",
+  "scripts": {
+    "analyze": "cem analyze --litelement",
+    "start": "web-dev-server",
+    "lint": "eslint --ext .js,.html . --ignore-path .gitignore && prettier \"**/*.js\" --check --ignore-path .gitignore",
+    "format": "eslint --ext .js,.html . --fix --ignore-path .gitignore && prettier \"**/*.js\" --write --ignore-path .gitignore",
+    "test": "web-test-runner --coverage",
+    "test:watch": "web-test-runner --watch",
+    "storybook": "npm run analyze -- --exclude dist && web-dev-server -c .storybook/server.mjs",
+    "storybook:build": "npm run analyze -- --exclude dist && build-storybook"
+  },
   "dependencies": {
     "@polymer/paper-spinner": "^3.0.2",
     "firebase": "^9.6.6",
-    "lit-element": "^2.1.0"
+    "lit": "^2.1.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/plugin-proposal-class-properties": "^7.2.3",
-    "@babel/plugin-proposal-decorators": "^7.2.3",
-    "@webcomponents/webcomponentsjs": "^2.2.4",
-    "es-dev-server": "^1.14.2",
+    "@custom-elements-manifest/analyzer": "^0.5.7",
+    "@open-wc/eslint-config": "^7.0.0",
+    "@open-wc/testing": "next",
+    "@web/dev-server": "^0.1.29",
+    "@web/dev-server-storybook": "^0.0.2",
+    "@web/test-runner": "^0.13.27",
+    "eslint": "^8.8.0",
+    "eslint-config-prettier": "^8.3.0",
     "firebase-loginbutton": "^4.0.1",
-    "rollup": "^1.1.0",
-    "rollup-plugin-babel": "^4.3.0",
-    "rollup-plugin-node-resolve": "^4.0.0"
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.3",
+    "prettier": "^2.5.1"
   },
-  "scripts": {
-    "build": "rm -rf build && mkdir build && rollup -c",
-    "start": "es-dev-server --app-index /demo/index.html --node-resolve --watch --open"
+  "customElements": "custom-elements.json",
+  "eslintConfig": {
+    "extends": [
+      "@open-wc",
+      "prettier"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "arrowParens": "avoid"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }

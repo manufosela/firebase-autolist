@@ -1,75 +1,76 @@
-# firebase-autolist
+# \<firebase-autolist>
 
-Autolistado de los elementos del path de una base de datos de Firebase mostrando el valor de la clave que seleccionemos
+This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) recommendation.
 
-## Demo
+## Installation
 
+```bash
+npm i firebase-autolist
 ```
-<h2>Basic firebase-autolist Demo</h2>
-<h3>Demo</h3>
-<firebase-autolist path="FIREBASE_PATH" field-key="KEY_DOCUMENT_TO_SHOW"></firebase-autolist>
 
-```
-<!---
-```
-<custom-element-demo>
-  <template>
-    <link rel="import" href="firebase-autolist.html">
-    <next-code-block></next-code-block>
-  </template>
-</custom-element-demo>
-```
--->
+## Usage
 
 ```html
-<firebase-autolist path="/peliculas" field-key="titulo" height="100"></firebase-autolist>
+<script type="module">
+  import 'firebase-autolist/firebase-autolist.js';
+</script>
+
+<firebase-autolist></firebase-autolist>
 ```
 
-## Dependencies
-Is mandatory has login token from firebase.
-You can use [firebase-loginbutton](https://github.com/manufosela/firebase-loginbutton) component to do it.
+## Linting and formatting
 
-## Events
-When element is clicked dispatch **firebase-autolist-selectid** with payload element id and object id
+To scan the project for linting and formatting errors, run
 
-## CSS-VARIABLES
-```css
-      --font-size: 1rem
-      --link-hover: #0A7CAF
-      --selected-color: #F30
-      --selected-bg: #888
+```bash
+npm run lint
 ```
 
-## Install the Polymer-CLI
+To automatically fix linting and formatting errors, run
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) and npm (packaged with [Node.js](https://nodejs.org)) installed. Run `npm install` to install your element's dependencies, then run `polymer serve` to serve your element locally.
-
-## Viewing Your Element
-
-```
-$ polymer serve
+```bash
+npm run format
 ```
 
-## Running Tests
+## Testing with Web Test Runner
 
-```
-$ polymer test
-```
+To execute a single test run:
 
-## Build
-```
-$ npm run build
+```bash
+npm run test
 ```
 
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+To run the tests in interactive watch mode run:
 
-##Author
-**@manufosela**
+```bash
+npm run test:watch
+```
 
-## License
+## Demoing with Storybook
 
-This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details
+To run a local instance of Storybook for your component, run
 
-## Generated
+```bash
+npm run storybook
+```
 
-**generator-lit-element-base** - *yeoman npm package* - by [@manufosela](https://github.com/manufosela/generator-litelement-webcomponent)
+To build a production version of Storybook, run
+
+```bash
+npm run storybook:build
+```
+
+
+## Tooling configs
+
+For most of the tools, the configuration is in the `package.json` to minimize the amount of files in your project.
+
+If you customize the configuration a lot, you can consider moving them to individual files.
+
+## Local Demo with `web-dev-server`
+
+```bash
+npm start
+```
+
+To run a local development server that serves the basic demo located in `demo/index.html`

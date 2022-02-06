@@ -1,91 +1,86 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en-GB">
   <head>
-    <title>firebase-autolist demo</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
-    <script type="module" src="/node_modules/firebase-loginbutton/firebase-loginbutton.js"></script>
-    <script type="module" src="../firebase-autolist.js"></script>
+    <meta charset="utf-8" />
     <style>
-      .blocks {
-        display:flex;
-        flex-direction:row;
-        flex-wrap: wrap;
-      }
-      .block {
-        display:flex;
-        flex-direction:column;
-        flex-wrap: wrap;
-        white-space: normal;
-      }
-      .code {
-        padding: 20px;
-        color:#FFF; 
-        background: #000;
-      }
-      .attributes {
-        padding-left: 20px;
+      body {
+        background: #fafafa;
       }
       .layer {
-        display:flex;
-        margin-bottom:4rem;
+        margin: 1rem;
+        display: flex;
       }
       firebase-autolist {
-        margin: 0 40px;
+        margin: 1rem;
       }
     </style>
+    <script type="module">
+      import '../node_modules/firebase-loginbutton/firebase-loginbutton.js';
+      import '../firebase-autolist.js';
+    </script>
   </head>
-
   <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic firebase-autolist Demo</h3>
-      <div class="blocks">
-        <pre class="block code">
-          <code>
-            &lt;firebase-autolist path="FIREBASE_PATH" field-key="KEY_DOCUMENT_TO_SHOW"&gt;&lt;/firebase-autolist&gt;
-          </code>
-        </pre>
-        <pre class="block attributes">
-          <h3>Attributes</h3>
-          <ul>
-            <li>path (String)</li>
-            <li>field-key (String)</li>
-            <li>height (Number) [0-100] (percent value, not necessary % symbol)</li>
-            <li>show-id (Boolean) [default false]</li>
-          </ul>
-        </pre>
-      </div>
-
+    <div id="demo">
       <h1>DEMO</h1>
-      <firebase-loginbutton api-key="AIzaSyCVpVjyqS9qNcTsTDuQ8qBL1i4VPy5CdpY" domain="coleccion-peliculas"
-      messaging-sender-id="852819704247" app-id="1:852819704247:web:9ac0a093401920ed"></firebase-loginbutton>
+      <firebase-loginbutton
+        id="login-button"
+        api-key="AIzaSyCVpVjyqS9qNcTsTDuQ8qBL1i4VPy5CdpY"
+        domain="coleccion-peliculas"
+        messaging-sender-id="852819704247"
+        app-id="1:852819704247:web:9ac0a093401920ed"
+      ></firebase-loginbutton>
 
       <div class="layer">
-        <firebase-autolist id="autolist-1" path="/" select="peliculas"></firebase-autolist>
-
-        <firebase-autolist id="autolist-2" height="20" path="/peliculas" field-key="C02-título" select="Bellepoc" auto-refresh show-delete></firebase-autolist>
+        <firebase-autolist
+          id="autolist-1"
+          login-id="login-button"
+          path="/"
+          val-selected="peliculas"
+          select-view="true"
+        ></firebase-autolist>
+        <firebase-autolist
+          id="autolist-2"
+          login-id="login-button"
+          height="20"
+          path="/peliculas"
+          field-key="C02-título"
+          val-selected="La guerra de los clones"
+          auto-refresh
+          show-delete
+        ></firebase-autolist>
       </div>
-      <button id="cssBtn" onclick="changecss()">change style first element of peliculas</button>
+      <!--<button id="cssBtn" onclick="changecss()">
+        change style first element of peliculas
+      </button>-->
       <div id="info"></div>
-
-      <script>
-        const layer = document.querySelector('#info');
-        document.addEventListener('firebase-autolist-selectid', (ev) => {
-          layer.innerHTML = 'Recibido evento "firebase-autoform-selectid" con el detail: ' + JSON.stringify(ev.detail);
-          if (ev.detail.objId === 'autolist-1') {
-            const autoform = document.querySelector('#autolist-2');
-            autoform.setAttribute('field-key', (ev.detail.id==='peliculas') ? 'C02-título' : '');
-            autoform.setAttribute('path', `/${ev.detail.id}`);
-          }
-        });
-
-        
-        function changecss(){
-          const customEvent = new CustomEvent('setcss-autolist-element', {detail: {id:'autolist-2', name:'[name="1"]', style:'color:green; font-weight:bold;'}});
-          document.dispatchEvent(customEvent);
-        }
-
-      </script>
     </div>
+
+    <script>
+      const layer = document.querySelector('#info');
+      document.addEventListener('firebase-autolist-selectid', ev => {
+        layer.innerHTML = `Recibido evento "firebase-autoform-selectid" con el detail: ${JSON.stringify(
+          ev.detail
+        )}`;
+        if (ev.detail.objId === 'autolist-1') {
+          const autoform = document.querySelector('#autolist-2');
+          autoform.setAttribute(
+            'field-key',
+            ev.detail.id === 'peliculas' ? 'C02-título' : ''
+          );
+          autoform.setAttribute('path', `/${ev.detail.id}`);
+        }
+      });
+
+      function changecss() {
+        const customEvent = new CustomEvent('setcss-autolist-element', {
+          detail: {
+            id: 'autolist-2',
+            name: '[name="1"]',
+            style: 'color:green; font-weight:bold;',
+          },
+        });
+        document.dispatchEvent(customEvent);
+      }
+    </script>
   </body>
 </html>
