@@ -1,7 +1,7 @@
 {
   "name": "firebase-autolist",
   "description": "Lit-Element webcomponent firebase-autolist",
-  "version": "1.8.3",
+  "version": "1.9.0",
   "main": "firebase-autolist.js",
   "repository": {
     "type": "git",
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/manufosela/firebase-autolist",
   "dependencies": {
     "@polymer/paper-spinner": "^3.0.2",
-    "firebase": "^6.3.4",
+    "firebase": "^9.6.6",
     "lit-element": "^2.1.0"
   },
   "devDependencies": {
@@ -27,8 +27,8 @@
     "@babel/plugin-proposal-class-properties": "^7.2.3",
     "@babel/plugin-proposal-decorators": "^7.2.3",
     "@webcomponents/webcomponentsjs": "^2.2.4",
-    "es-dev-server": "^1.46.0",
-    "firebase-loginbutton": "^2.3.5",
+    "es-dev-server": "^1.14.2",
+    "firebase-loginbutton": "^4.0.1",
     "rollup": "^1.1.0",
     "rollup-plugin-babel": "^4.3.0",
     "rollup-plugin-node-resolve": "^4.0.0"
