@@ -357,7 +357,7 @@ export class FirebaseAutolist extends LitElement {
   render() {
     const path = this.path.split('/');
     const height = (this.height > 0 && this.height <= 100) ? `height:${  this.height  }vh; overflow-y: scroll; overflow-x: hidden;` : '';
-    console.log(this.userData);
+    // console.log(this.userData);
     return html`
       ${this.userData !== null ? html` 
         ${this.search ? html`<input type="text" name="search">` : html``}
