@@ -20,40 +20,20 @@
     </script>
   </head>
   <body>
-    <div id="demo">
-      <h1>DEMO</h1>
-      <firebase-loginbutton
-        id="login-button"
-        api-key="AIzaSyCVpVjyqS9qNcTsTDuQ8qBL1i4VPy5CdpY"
-        domain="coleccion-peliculas"
-        messaging-sender-id="852819704247"
-        app-id="1:852819704247:web:9ac0a093401920ed"
-      ></firebase-loginbutton>
+    <h1>DEMO</h1>
+    <firebase-loginbutton
+      id="login-button"
+      api-key="AIzaSyCVpVjyqS9qNcTsTDuQ8qBL1i4VPy5CdpY"
+      domain="coleccion-peliculas"
+      messaging-sender-id="852819704247"
+      app-id="1:852819704247:web:9ac0a093401920ed"
+    ></firebase-loginbutton>
 
-      <div class="layer">
-        <firebase-autolist
-          id="autolist-1"
-          login-id="login-button"
-          path="/"
-          val-selected="peliculas"
-          select-view="true"
-        ></firebase-autolist>
-        <firebase-autolist
-          id="autolist-2"
-          login-id="login-button"
-          height="20"
-          path="/peliculas"
-          field-key="C02-título"
-          val-selected="La guerra de los clones"
-          auto-refresh
-          show-delete
-        ></firebase-autolist>
-      </div>
-      <!--<button id="cssBtn" onclick="changecss()">
-        change style first element of peliculas
-      </button>-->
-      <div id="info"></div>
-    </div>
+    <div id="demo" class="layer"></div>
+    <!--<button id="cssBtn" onclick="changecss()">
+      change style first element of peliculas
+    </button>-->
+    <div id="info"></div>
 
     <script>
       const layer = document.querySelector('#info');
@@ -81,6 +61,34 @@
         });
         document.dispatchEvent(customEvent);
       }
+    </script>
+    <script type="module">
+      import { html, render } from 'lit';
+
+      setTimeout(() => {
+        render(
+          html`
+            <firebase-autolist
+              id="autolist-1"
+              login-id="login-button"
+              path="/"
+              val-selected="peliculas"
+              select-view="true"
+            ></firebase-autolist>
+            <firebase-autolist
+              id="autolist-2"
+              login-id="login-button"
+              height="20"
+              path="/peliculas"
+              field-key="titulo"
+              val-selected="La guerra de los clones"
+              auto-refresh
+              show-delete
+            ></firebase-autolist>
+          `,
+          document.querySelector('#demo')
+        );
+      }, 3000);
     </script>
   </body>
 </html>

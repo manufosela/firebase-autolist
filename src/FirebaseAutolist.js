@@ -99,6 +99,8 @@ export class FirebaseAutolist extends LitElement {
     this.userDisplayNameData = null;
     this.emulation = false;
 
+    this.initialized = false;
+
     this._selectedElement = this._selectedElement.bind(this);
     this._setCssElement = this._setCssElement.bind(this);
     this._deleteElement = this._deleteElement.bind(this);
@@ -142,6 +144,15 @@ export class FirebaseAutolist extends LitElement {
   firstUpdated() {
     super.firstUpdated();
     this.id = this.id || `firebase-autolist-${Math.random().toString(36).substring(2, 15)}`;
+    if (!this.initialized) {
+      document.dispatchEvent(
+        new CustomEvent('are-it-logged-into-firebase', {
+          detail: {
+            id: this.loginId,
+          },
+        })
+      );
+    }
   }
 
   consoleLog(msg) {
@@ -153,6 +164,7 @@ export class FirebaseAutolist extends LitElement {
   _firebaseLogin(event) {
     const refId = event.detail.id;
     if (refId === this.loginId) {
+      this.initialized = true;
       this.firebaseApp = event.detail.firebaseApp;
       this.db = getDatabase(this.firebaseApp);
       this.userData = event.detail.user;
