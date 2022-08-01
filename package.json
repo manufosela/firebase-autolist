@@ -1,7 +1,7 @@
 {
   "name": "firebase-autolist",
   "description": "Lit-Element webcomponent firebase-autolist",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "main": "firebase-autolist.js",
   "module": "firebase-autolist.js",
   "repository": {

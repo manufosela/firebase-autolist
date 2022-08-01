@@ -261,12 +261,13 @@ export class FirebaseAutolist extends LitElement {
   _selectedElement(ev) {
     ev.preventDefault();
     ev.stopPropagation();
-    document.dispatchEvent(new CustomEvent('firebase-autolist-selectid', {detail: {id: ev.target.name, objId: this.id, value: ev.target.value}}));
+    document.dispatchEvent(new CustomEvent('firebase-autolist-selectid', {detail: {id: ev.target.name, objId: this.id, value: ev.target.name}}));
     const arrayLink = this.shadowRoot.querySelectorAll('#elements-layer li a.element');
     for (const link of arrayLink) {
       link.classList.remove('selected');
     }
     ev.target.classList.add('selected');
+    this.valSelected = ev.target.name;
   }
 
   _closeModal() {
